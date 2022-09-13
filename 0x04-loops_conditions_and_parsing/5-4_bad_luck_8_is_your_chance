@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # While loop using if, elif, and else displaying bad luck on 4th, good luck on 8th, Best School for the rest
 i=0
-while [ "$((i++))" -le 10 ]
+while [ "$((i++))" -lt 10 ]
 do
 	if [ "$i" == 4 ]
 	then	

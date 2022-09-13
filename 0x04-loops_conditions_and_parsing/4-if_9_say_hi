@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# While loop using if statement to display Best School 10x w/ 9th time showing hi on new line
+i=0
+while [ "$((i++))" -lt 10 ]
+do
+	echo "Best School"
+	if [ $i == 9 ]
+	then
+		echo "Hi"
+	fi
+done

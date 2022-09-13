@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # while loop displaying hours from 0-12 and min from 1-59
 hour=0
-while [ $hour -le 12 ]
+while [ "$hour" -le 12 ]
 do
 	echo "Hour: $hour"
 	min=0

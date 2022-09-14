@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Script shows bash pid made easy
+pgrep bash -l

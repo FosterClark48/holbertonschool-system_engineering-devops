@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Display listing ports
+netstat -tulp --program

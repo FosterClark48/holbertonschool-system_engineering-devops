@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# change ~/.ssh/config to not need a password for my server
+Host 5538-web-01
+    Hostname 13.37.235.70
+    User ubuntu
+    IdentityFile ~/.ssh/school
+    PasswordAuthentication no
+
+

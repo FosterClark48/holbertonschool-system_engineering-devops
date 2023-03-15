@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# script that installs and configures Nginx on remote server and redirects w/ 301
+
+# Update package list and install nginx
+sudo apt-get update
+sudo apt-get install -y nginx
+sudo ufw allow 'Nginx HTTP'
+
+
+sudo rm /var/www/html/*
+sudo echo "Hello World!" | sudo tee /var/www/html/index.html
+
+link="https://www.youtube.com/watch?v=QH2-TGUlwu4"
+firstLocation="^\tlocation / {"
+secondLocation="\tlocation /redirect_me {\n\t\t return 301 $link;\n\t}\n\tlocation / {"
+
+sudo sed -i "s|$firstLocation|$secondLocation|1" /etc/nginx/sites-available/default
+
+# Restart nginx w/out using systmctl
+sudo service nginx restart

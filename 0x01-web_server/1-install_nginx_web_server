@@ -5,7 +5,7 @@
 sudo apt-get -y update
 sudo apt-get -y install nginx
 
-sudo echo 'Hello Wolrd!' | sudo tee /var/www/html/index.html
+sudo echo 'Hello World!' | sudo tee /var/www/html/index.html
 
 sed -i 's/listen\s*80;/listen 80 defualt_server;/g' /etc/nginx/sites-available/default
 sed -i 's|#*root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-available/default

@@ -2,12 +2,7 @@
 # script that installs and configures Nginx on remote server
 
 # Update package list and install nginx
-sudo apt-get update
-sudo apt-get install -y nginx
-# Opens HTTP port (port 80) in ubuntu machine's firewall allowing incoming connection to nginx web server
-sudo ufw allow 'Nginx HTTP'
-sudo /etc/init.d/nginx restart
-
-# Deletes any files or folder in given directory
-sudo rm /var/www/html/*
-sudo echo "Hello World\n" | sudo tee /var/www/html/index.html
+sudo apt-get -y update
+sudo apt-get -y install nginx
+echo 'Hello Wolrd!' > /var/www/html/index.html
+sudo service nginx restart

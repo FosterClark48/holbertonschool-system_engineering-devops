@@ -1,21 +1,26 @@
 #!/usr/bin/env bash
-# script that installs and configures Nginx on remote server and redirects w/ 301
+# script that installs and configures Nginx on remote server and redirects w/ 301 and add 404 page
+
 
 # Update package list and install nginx
-sudo apt-get update
-sudo apt-get install -y nginx
-sudo ufw allow 'Nginx HTTP'
+sudo apt-get -y update
+sudo apt-get -y install nginx
 
+sudo echo 'Hello World!' | sudo tee /var/www/html/index.html
+sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
-sudo rm /var/www/html/*
-sudo echo "Hello World!" | sudo tee /var/www/html/index.html
-sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/404Error.html
+# Create backup of default configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default_backup
 
-link="https://www.youtube.com/watch?v=QH2-TGUlwu4"
-firstLocation="^\tlocation / {"
-secondLocation="\tlocation /redirect_me {\n\t\t return 301 $link;\n\t}\n\terror_page 404 /404Error.html;\n\tlocation / {"
+# Modify configuration file to listen on port 80 and set document root to /var/www/html
+sudo sed -i 's/listen\s*80;/listen 80 defualt_server;/g' /etc/nginx/sites-available/default
+sudo sed -i 's|#*root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-available/default
+sudo sed -i 's|#*index index.html;|index index.html;|g' /etc/nginx/sites-available/default
 
-sudo sed -i "s|$firstLocation|$secondLocation|1" /etc/nginx/sites-available/default
+# Add redirect rule to configuration file
+sudo sed -i 's|location / {|location / {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;|g' /etc/nginx/sites-available/default
 
-# Restart nginx w/out using systmctl
+# Modify configuration file to use custom 404 page
+sudo sed -i '/error_page 404/i \\tlocation = /404.html {\n\t\tinternal;\n\t}\n\n\terror_page 404 /404.html;' /etc/nginx/sites-available/default
+
 sudo service nginx restart

@@ -6,7 +6,7 @@ apt-get udpate
 apt-get install -y nginx
 
 # Write 'Hello World' to the default directory
-echo "Hello World" | tee /var/www/html/index.html
+echo "Hello World!" | tee /var/www/html/index.html
 
 # Configure nginx to listen on port 80 and serve from default directory
 sed -i 's/listen\s*80;/listen 80 defualt_server;/g' /etc/nginx/sites-available/default

@@ -2,8 +2,8 @@
 # script that installs and configures Nginx on remote server
 
 # Update package list and install nginx
-apt-get udpate
-apt-get install -y nginx
+sudo apt-get -y udpate
+sudo apt-get install -y nginx
 
 # Write 'Hello World' to the default directory
 echo "Hello World!" | tee /var/www/html/index.html
@@ -14,4 +14,4 @@ sed -i 's|#*root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-availabl
 sed -i 's|#*index index.html;|index index.html;|g' /etc/nginx/sites-available/default
 
 # Restart nginx w/out using systmctl
-service nginx restart
+sudo service nginx restart

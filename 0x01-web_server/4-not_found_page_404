@@ -6,7 +6,7 @@ sudo apt-get -y update
 sudo apt-get -y install nginx
 
 sudo echo 'Hello World!' | sudo tee /var/www/html/index.html
-sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/404Error.html
+sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/error404.html
 
 # Create backup of default configuration file
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default_backup
@@ -17,10 +17,13 @@ sed -i 's|#*root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-availabl
 sed -i 's|#*index index.html;|index index.html;|g' /etc/nginx/sites-available/default
 
 # Add redirect rule to configuration file
-link="https://www.youtube.com/watch?v=QH2-TGUlwu4"
 firstLocation="^\tlocation / {"
-secondLocation="\tlocation /redirect_me {\n\t\t return 301 $link;\n\t}\n\terror_page 404 /404Error.html;\n\tlocation / {"
+secondLocation="\tlocation /redirect_me {\n\t\treturn 301 \@scheme://youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n\n\tlocation / {"
+replace404="\terror_page 404 /error404.html;\n\n\tlocation / {"
 
-sudo sed -i "s|$firstLocation|$secondLocation|1" /etc/nginx/sites-available/default
+sudo sed -i "s|$firstLocation|$secondLocation|g" /etc/nginx/sites-available/default
+sudo sed -i "s|$firstLocation|$replace404|g" /etc/nginx/sites-available/default
+
+# sudo sed -i 's|location / {|location / {\n\t\t return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;|g' /etc/nginx/sites-available/default
 
 sudo service nginx restart

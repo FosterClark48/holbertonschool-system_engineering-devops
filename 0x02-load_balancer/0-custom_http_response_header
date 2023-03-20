@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# script that installs and configures Nginx on remote server and redirects w/ 301, 404, and grabs header
+
+# Update package list and install nginx
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+sudo echo 'Hello World!' | sudo tee /var/www/html/index.html
+sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/error404.html
+
+# Create backup of default configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default_backup
+
+# Modify configuration file to listen on port 80 and set document root to /var/www/html
+sudo sed -i 's/listen\s*80;/listen 80 defualt_server;/g' /etc/nginx/sites-available/default
+sudo sed -i 's|#*root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-available/default
+sudo sed -i 's|#*index index.html;|index index.html;|g' /etc/nginx/sites-available/default
+
+# Add redirect rule, 404 rule, header rule to configuration file
+firstLocation="^\tlocation / {"
+secondLocation="\tlocation /redirect_me {\n\t\treturn 301 \@scheme://youtube.com/watch?v=QH:2-TGUlwu4;\n\t}\n\n\tlocation / {"
+replace404="\terror_page 404 /error404.html;\n\n\tlocation / {"
+add_header="\tlocation / {\n\t\tadd_header X-Served-By "$HOSTNAME";"
+
+sudo sed -i "s|$firstLocation|$secondLocation|g" /etc/nginx/sites-available/default
+sudo sed -i "s|$firstLocation|$replace404|g" /etc/nginx/sites-available/default
+sudo sed -i "s|$firstLocation|$add_header|g" /etc/nginx/sites-available/default
+
+sudo service nginx restart
+sudo service nginx reload

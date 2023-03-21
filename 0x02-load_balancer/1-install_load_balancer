@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# This script installs and configures HAproxy load balancer
+# HAproxy will send traffic to 5538-web-01 and 5538-web-02
+# Requests will be distributed using round robin algorithm
+
+# Inline vars to store config for HAproxy front and backend sections
+cfg_frontend="\nfrontend main\n\tbind *:80\n\tmode http\n\tdefault_backend web_servers\n"
+cfg_backend="\nbackend web_servers\n\tbalance roundrobin\n\toption forwardfor\n\tserver 5538-web-01 13.37.235.70:80 check\n\tserver 5538-web-02 15.237.24.143:80 check\n"
+
+
+# Install HAproxy to use as a load balancer
+sudo apt-get -y update
+sudo apt-get -y install haproxy
+
+# Configure init script for HAproxy management
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+echo -e "$cfg_frontend""$cfg_backend" | sudo tee -a /etc/haproxy/haproxy.cfg
+
+# Restart HAproxy service to apply new configuration
+sudo service haproxy restart
